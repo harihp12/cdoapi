@@ -1,0 +1,11 @@
+Package: cdoapi
+Type: Package
+Title: R Interface for the NOAA Climate Data Online web API
+Version: 1.0
+Date: 2018-09-25
+Authors@R: c(
+  person("Hariprasath", "Govindarajan", email = "hargo729@student.liu.se", role = c("cre", "aut")),
+  person("Hector", "Plata", email = "hecpl268@student.liu.se", role = "aut"),
+  person("Julius", "Kittler", email = "julki092@student.liu.se", role = "aut"))
+Description: R Interface for the NOAA Climate Data Online web API for weather and climate data.
+License: MIT+ file LICENSE
