@@ -9,3 +9,4 @@ Authors@R: c(
   person("Julius", "Kittler", email = "julki092@student.liu.se", role = "aut"))
 Description: R Interface for the NOAA Climate Data Online web API for weather and climate data.
 License: MIT+ file LICENSE
+RoxygenNote: 6.1.0
