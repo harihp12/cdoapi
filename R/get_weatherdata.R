@@ -150,7 +150,5 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date) {
   
 }
 
-# # That's Julius NOAA_TOKEN (get yours here: https://www.ncdc.noaa.gov/cdo-web/token)
-# Sys.setenv("NOAA_TOKEN" = "cfcoWaQRykPCelOlZitLALPtKQuhBXnR")
 
 
