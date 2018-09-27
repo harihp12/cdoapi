@@ -1,35 +1,21 @@
+#' Get information about available cities
+#' 
+#' \code{get_locations} is a function that lists all the available cities for 
+#' which the data can be queried with \code{get_weatherdata}
+#'
+#' @return
+#' Data frame containing information about the available cities.
+#'
+#' @examples
+#' 
+#' locations = get_locations()
+#' head(locations)
+#' 
+#' head(locations[which(locations$country == "SW"), ]) # Locations in Sweden
+#' head(locations[which(locations$country == "GM"), ]) # Locations in Germany
+#' 
+#' @export
 ################################################################################
-
-# ------------------------------------------------------------------------------
-# DESCRIPTION
-# ------------------------------------------------------------------------------
-
-# The function get_locations can be considered more like a help function that
-# allows the user to get all available cities for which data can be queried
-# with get_weatherdata.
-
-# ------------------------------------------------------------------------------
-# Required Packages
-# ------------------------------------------------------------------------------
-
-library(httr)
-library(jsonlite)
-
-# ------------------------------------------------------------------------------
-# Example (Run this after loading the packages, functions etc.)
-# ------------------------------------------------------------------------------
-
-# That's Julius NOAA_TOKEN (get yours here: https://www.ncdc.noaa.gov/cdo-web/token)
-Sys.setenv("NOAA_TOKEN" = "cfcoWaQRykPCelOlZitLALPtKQuhBXnR")
-
-locations = get_locations()
-head(locations)
-
-head(locations[which(locations$country == "SW"), ]) # Locations in Sweden
-head(locations[which(locations$country == "GM"), ]) # Locations in Germany
-
-################################################################################
-
 
 # ------------------------------------------------------------------------------
 # Get information about available cities
@@ -123,5 +109,8 @@ get_locations = function() {
   return(data)
   
 }
+
+# That's Julius NOAA_TOKEN (get yours here: https://www.ncdc.noaa.gov/cdo-web/token)
+#Sys.setenv("NOAA_TOKEN" = "cfcoWaQRykPCelOlZitLALPtKQuhBXnR")
 
 

@@ -10,5 +10,10 @@ Authors@R: c(
 Description: R Interface for the NOAA Climate Data Online web API for weather and climate data.
 License: MIT+ file LICENSE
 RoxygenNote: 6.1.0
+Encoding: UTF-8
+Depends:
+    httr,
+    jsonlite
 Suggests: 
-    covr
+    covr,
+    testthat

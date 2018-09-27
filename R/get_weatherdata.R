@@ -1,53 +1,47 @@
 ################################################################################
 
-# ------------------------------------------------------------------------------
-# DESCRIPTION
-# ------------------------------------------------------------------------------
-
 # Note: First, the user should run the get_locations functions to see all the 
 # city IDs for which we can query data with this function here: get_weatherdata
-
-# get_weatherdata allows the user to get weatherdata for a specified 
-
-# a) data_type (e.g. TAVG, TMIN, TMAX, SNOW, PRCP, others: https://docs.opendata.aws/noaa-ghcn-pds/readme.html)
-# b) city_ID (which should be taken from the output of get_locations)
-# c) start_date (in the format "YYYY-MM-DD")
-# d) end_date (in the format "YYYY-MM-DD")
 
 # Note: The weatherdata from all stations in the specified city is returned. 
 # Hence, it might make sense to create another function that averages the values
 # over different stations by date.
 
-# ------------------------------------------------------------------------------
-# Required Packages
-# ------------------------------------------------------------------------------
-
-library(httr)
-library(jsonlite)
-
-# ------------------------------------------------------------------------------
-# Example (Run this after loading the packages, functions etc.)
-# ------------------------------------------------------------------------------
-
-# That's Julius NOAA_TOKEN (get yours here: https://www.ncdc.noaa.gov/cdo-web/token)
-Sys.setenv("NOAA_TOKEN" = "cfcoWaQRykPCelOlZitLALPtKQuhBXnR")
-
-# Get location data to select the city_IDs we are interested in
-locations = get_locations()
-
-# Get weatherdata for Linköping (only September)
-head(locations[which(locations$country == "SW"), ]) # Pick SW000006 (Linköping)
-weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
-
-# Get weatherdata for Berlin (only September)
-head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
-weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
-
-# Note: See below for other datatypes (e.g. TMAX, TMIN, PRCP, SNOW)
-# https://docs.opendata.aws/noaa-ghcn-pds/readme.html
-
 ################################################################################
 
+
+#' Get weatherdata for specific time period and cities
+#' 
+#' get_weatherdata allows the user to get weatherdata for a specified 
+#' 
+#' a) data_type (e.g. TAVG, TMIN, TMAX, SNOW, PRCP, 
+#'    others: https://docs.opendata.aws/noaa-ghcn-pds/readme.html)
+#' b) city_ID (which should be taken from the output of get_locations)
+#' c) start_date (in the format "YYYY-MM-DD")
+#' d) end_date (in the format "YYYY-MM-DD")
+#'
+#' @param data_type Character
+#' @param city_ID Character
+#' @param start_date Character, valid date
+#' @param end_date Character, valid date
+#'
+#' @return
+#'
+#' @examples
+#' # Get location data to select the city_IDs we are interested in
+#' locations = get_locations()
+#' 
+#' # Get weatherdata for Linköping (only September)
+#' head(locations[which(locations$country == "SW"), ]) # Pick SW000006 (Linköping)
+#' weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
+#' 
+#' # Get weatherdata for Berlin (only September)
+#' head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
+#' weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
+#' 
+#' @export
+#' 
+################################################################################
 
 # ------------------------------------------------------------------------------
 # Get weatherdata for specific time period and cities 
@@ -153,5 +147,8 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date) {
   return(data)
   
 }
+
+# # That's Julius NOAA_TOKEN (get yours here: https://www.ncdc.noaa.gov/cdo-web/token)
+# Sys.setenv("NOAA_TOKEN" = "cfcoWaQRykPCelOlZitLALPtKQuhBXnR")
 
 
