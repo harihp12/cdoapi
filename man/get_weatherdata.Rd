@@ -29,15 +29,17 @@ c) start_date (in the format "YYYY-MM-DD")
 d) end_date (in the format "YYYY-MM-DD")
 }
 \examples{
+\dontrun{
 # Get location data to select the city_IDs we are interested in
 locations = get_locations()
 
-# Get weatherdata for Linköping (only September)
-head(locations[which(locations$country == "SW"), ]) # Pick SW000006 (Linköping)
+# Get weatherdata for LinkÃ¶ping (only September)
+head(locations[which(locations$country == "SW"), ]) # Pick SW000006 (LinkÃ¶ping)
 weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
 
 # Get weatherdata for Berlin (only September)
 head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
 weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
+}
 
 }

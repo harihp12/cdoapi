@@ -7,12 +7,13 @@
 #' Data frame containing information about the available cities.
 #'
 #' @examples
-#' 
+#' \dontrun{
 #' locations = get_locations()
 #' head(locations)
 #' 
 #' head(locations[which(locations$country == "SW"), ]) # Locations in Sweden
 #' head(locations[which(locations$country == "GM"), ]) # Locations in Germany
+#' }
 #' 
 #' @export
 ################################################################################

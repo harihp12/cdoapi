@@ -28,6 +28,7 @@
 #' @return
 #'
 #' @examples
+#' \dontrun{
 #' # Get location data to select the city_IDs we are interested in
 #' locations = get_locations()
 #' 
@@ -38,6 +39,7 @@
 #' # Get weatherdata for Berlin (only September)
 #' head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
 #' weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
+#' }
 #' 
 #' @export
 #' 

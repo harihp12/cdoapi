@@ -14,11 +14,12 @@ Data frame containing information about the available cities.
 which the data can be queried with \code{get_weatherdata}
 }
 \examples{
-
+\dontrun{
 locations = get_locations()
 head(locations)
 
 head(locations[which(locations$country == "SW"), ]) # Locations in Sweden
 head(locations[which(locations$country == "GM"), ]) # Locations in Germany
+}
 
 }
