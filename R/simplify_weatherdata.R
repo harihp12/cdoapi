@@ -7,15 +7,15 @@
 # This function takes as input a data frame that was returned by the 
 # get_weatherdata function. 
 
-# The average_stations function comes into play, when the user has extracted
+# The simplify_weatherdata function comes into play, when the user has extracted
 # weatherdata with get_weatherdata for a city in which several different 
 # weather stations exist. If this is the case, then there will be several 
 # data points for the value (e.g. TAVG) for every day for the city, namely 
 # one data point for each station that has information about the city.
 
-# average_stations calculates the mean of the value column from the data frame 
+# simplify_weatherdata calculates the mean of the value column from the data frame 
 # that was returned by get_weatherdata. The mean is calculated across stations 
-# for every day. Hence, the average_stations returns a modified data frame 
+# for every day. Hence, the simplify_weatherdata returns a modified data frame 
 # that really contains one value per day for the given city.
 
 
@@ -29,17 +29,16 @@ library(dplyr)
 # Example (Run this after loading the packages, functions etc.)
 # ------------------------------------------------------------------------------
 
-# First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
-# Then, set it as system variable (as character variable):
-Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
-
-# Get weatherdata for Berlin (only September)
-head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
-weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
-
-# Since there are 2 stations with weather data for Berlin, we modify the data
-
-weatherdata_averaged_across_stations = average_stations(weatherdata)
+# # First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
+# # Then, set it as system variable (as character variable):
+# Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
+# 
+# # Get weatherdata for Berlin (only September)
+# weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
+# 
+# # Since there are 2 stations with weather data for Berlin, we modify the data
+# 
+# weatherdata_simplified = simplify_weatherdata(weatherdata)
 
 ################################################################################
 
@@ -48,25 +47,12 @@ weatherdata_averaged_across_stations = average_stations(weatherdata)
 # Aggregate weatherdata accross different stations by day
 # ------------------------------------------------------------------------------
 
-average_stations = function(weatherdata) {
+simplify_weatherdata = function(weatherdata) {
   
   # ----------------------------------------------------------------------------
   # Stop Conditions
   # ----------------------------------------------------------------------------
-  
-  # Token ----------------------------------------------------------------------
-  
-  # Get token for NOAA connection
-  mytoken = Sys.getenv("NOAA_TOKEN")
-  
-  # Check if parameter is of class character
-  stopifnot(class(mytoken) == "character")
-  
-  # Check if simple query returns 200 code (success)
-  url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations"
-  resp = GET(url, add_headers(token = mytoken))
-  stopifnot(resp$status_code == 200)
-  
+
   # weatherdata ----------------------------------------------------------------
   
   # Check if parameter is of class data frame

@@ -4,7 +4,7 @@
 #' 
 #' a) data_type (e.g. TAVG, TMIN, TMAX, SNOW, PRCP, 
 #'    others: https://docs.opendata.aws/noaa-ghcn-pds/readme.html)
-#' b) city_ID (which should be taken from the output of get_locations)
+#' b) city_ID (which should be taken from the output of )
 #' c) start_date (in the format "YYYY-MM-DD")
 #' d) end_date (in the format "YYYY-MM-DD")
 #'
@@ -14,7 +14,7 @@
 #'
 #' Note: For this function, get_weatherdata, we also check the city_ID, the 
 #' start_date and end_date. Because this requires another run of the function 
-#' get_locations, which takes time, we give the user the option to switch this 
+#' , which takes time, we give the user the option to switch this 
 #' off with check = FALSE assuming that he himself checks the parameter inputs 
 #' thouroughly when he does indeed set check = FALSE.
 #'
@@ -33,14 +33,14 @@
 #' Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
 #' 
 #' # Get location data to select the city_IDs we are interested in
-#' locations = get_locations()
+#' cities = ()
 #' 
 #' # Get weatherdata for Linköping (only September)
-#' head(locations[which(locations$country == "SW"), ]) # Pick SW000006 (Linköping)
+#' head(cities[which(cities$country == "SW"), ]) # Pick SW000006 (Linköping)
 #' weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
 #' 
 #' # Get weatherdata for Berlin (only September)
-#' head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
+#' head(cities[which(cities$country == "GM"), ]) # Pick GM000001 (Berlin)
 #' weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
 #' 
 #' 
@@ -71,7 +71,7 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRU
   # city_ID, the start_date and end_date. 
   
   if (check == TRUE) {
-    invisible(capture.output(locations = get_locations()))
+    invisible(capture.output(cities = get_cities()))
     cat("We are checking the availability of data for your city_ID, start_date and end_date...\n")
   }
   
@@ -112,17 +112,23 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRU
   # Check if parameter is of class character
   stopifnot(class(city_ID) == "character")
   
-  # If check = TRUE, check if city ID is among locations
-  if (check == TRUE) stopifnot(city_ID %in% locations$id)
+  # Check if parameter is of length 8
+  stopifnot(nchar(city_ID) == 8)
+  
+  # If check = TRUE, check if city ID is among cities
+  if (check == TRUE) stopifnot(city_ID %in% cities$id)
     
   # start_date -----------------------------------------------------------------
   
   # Check if parameter is of class character
   stopifnot(class(start_date) == "character")
   
+  # Check if length of parameter is 10
+  stopifnot(nchar(start_date) == 10)
+  
   # If check = TRUE, check if start_date is not before mindate
   if (check == TRUE) {
-    mindate_chr = locations[which(locations$id == city_ID), "mindate"]
+    mindate_chr = cities[which(cities$id == city_ID), "mindate"]
     mindate_date = as.Date(mindate_chr)
     start_date_date = as.Date(start_date)
     
@@ -134,9 +140,12 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRU
   # Check if parameter is of class character
   stopifnot(class(end_date) == "character")
   
+  # Check if length of parameter is 10
+  stopifnot(nchar(end_date) == 10)
+  
   # If check = TRUE, check if end_date is not after mindate
   if (check == TRUE) {
-    maxdate_chr = locations[which(locations$id == city_ID), "maxdate"]
+    maxdate_chr = cities[which(cities$id == city_ID), "maxdate"]
     maxdate_date = as.Date(maxdate_chr)
     end_date_date = as.Date(end_date)
     
@@ -160,8 +169,8 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRU
   number = parsed$metadata$resultset$count # number of observations
   p = ceiling(number / 1000) - 1 # no. of required loops (due to max limit 1000)
   
-  # Print a quick info for the user
-  cat("We are getting", number, "observations for you. Please be patient...")
+  # # Print a quick info for the user
+  # cat("We are getting", number, "observations for you. Please be patient...")
   
   # Initialize dataset with information about first 1000 observations
   url = paste0(url_base, "&limit=1000")
@@ -180,7 +189,7 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRU
       resp = GET(url, add_headers(token = mytoken))
       parsed = fromJSON(content(resp, type = "text", encoding = "UTF-8"))
       
-      # Add information of locations do the data set
+      # Add information of cities do the data set
       data = rbind(data, parsed$results)
       
     } else {
@@ -190,7 +199,7 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRU
       resp = GET(url, add_headers(token = mytoken))
       parsed = fromJSON(content(resp, type = "text", encoding = "UTF-8"))
       
-      # Add information of locations do the data set
+      # Add information of cities do the data set
       data = rbind(data, parsed$results)
       
     }

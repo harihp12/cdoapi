@@ -13,7 +13,9 @@ RoxygenNote: 6.1.0
 Encoding: UTF-8
 Depends:
     httr,
-    jsonlite
+    jsonlite,
+    stringr, 
+    dplyr
 Suggests: 
     covr,
     testthat
