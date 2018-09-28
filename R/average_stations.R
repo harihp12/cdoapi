@@ -29,8 +29,9 @@ library(dplyr)
 # Example (Run this after loading the packages, functions etc.)
 # ------------------------------------------------------------------------------
 
-# That's Julius NOAA_TOKEN (get yours here: https://www.ncdc.noaa.gov/cdo-web/token)
-Sys.setenv("NOAA_TOKEN" = "cfcoWaQRykPCelOlZitLALPtKQuhBXnR")
+# First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
+# Then, set it as system variable (as character variable):
+Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
 
 # Get weatherdata for Berlin (only September)
 head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)

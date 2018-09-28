@@ -8,6 +8,11 @@
 #'
 #' @examples
 #' \dontrun{
+#' 
+#' # First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
+#' # Then, set it as system variable (as character variable):
+#' Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
+#' 
 #' locations = get_locations()
 #' head(locations)
 #' 
@@ -110,8 +115,4 @@ get_locations = function() {
   return(data)
   
 }
-
-# That's Julius NOAA_TOKEN (get yours here: https://www.ncdc.noaa.gov/cdo-web/token)
-#Sys.setenv("NOAA_TOKEN" = "cfcoWaQRykPCelOlZitLALPtKQuhBXnR")
-
 

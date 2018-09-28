@@ -27,6 +27,11 @@
 #'
 #' @examples
 #' \dontrun{
+#' 
+#' #' # First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
+#' # Then, set it as system variable (as character variable):
+#' Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
+#' 
 #' # Get location data to select the city_IDs we are interested in
 #' locations = get_locations()
 #' 
