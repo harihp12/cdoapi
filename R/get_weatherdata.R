@@ -14,9 +14,15 @@
 # c) start_date (in the format "YYYY-MM-DD")
 # d) end_date (in the format "YYYY-MM-DD")
 
-# Note: The weatherdata from all stations in the specified city is returned. 
-# Hence, it might make sense to create another function that averages the values
-# over different stations by date.
+# Note: The weatherdata from all stations in the specified city is returned. The
+# function average_stations can be used to automatically modify the data returned
+# by the get_weatherdata function so that there is only one avg. value per date.
+
+# Note: For this function, get_weatherdata, we also check the city_ID, the 
+# start_date and end_date. Because this requires another run of the function 
+# get_locations, which takes time, we give the user the option to switch this 
+# off with check = FALSE assuming that he himself checks the parameter inputs 
+# thouroughly when he does indeed set check = FALSE.
 
 # ------------------------------------------------------------------------------
 # Required Packages
@@ -24,6 +30,7 @@
 
 library(httr)
 library(jsonlite)
+library(utils)
 
 # ------------------------------------------------------------------------------
 # Example (Run this after loading the packages, functions etc.)
@@ -43,6 +50,14 @@ weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
 head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
 weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
 
+# If you want to download data for several years, you need to do it year by year
+weatherdata_2018 = get_weatherdata("TAVG", "SW000006", "2018-01-01", "2018-08-31", check = FALSE)
+weatherdata_2017 = get_weatherdata("TAVG", "SW000006", "2017-01-01", "2017-12-31", check = FALSE)
+weatherdata_17to18 = rbind(weatherdata_2017, weatherdata_2018)
+plot(x = as.Date(weatherdata_17to18$date), y = weatherdata_17to18$value/10, 
+     main = "Avg. Temperature in Linköping, Sweden [2017-2018]", 
+     xlab = "Date", ylab= "Temperature in C")
+
 # Note: See below for other datatypes (e.g. TMAX, TMIN, PRCP, SNOW)
 # https://docs.opendata.aws/noaa-ghcn-pds/readme.html
 
@@ -53,11 +68,19 @@ weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
 # Get weatherdata for specific time period and cities 
 # ------------------------------------------------------------------------------
 
-get_weatherdata = function(data_type, city_ID, start_date, end_date) {
+get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRUE) {
 
   # ----------------------------------------------------------------------------
   # Stop Conditions
   # ----------------------------------------------------------------------------
+  
+  # If check = TRUE, download location data to check the input parameters
+  # city_ID, the start_date and end_date. 
+  
+  if (check == TRUE) {
+    invisible(capture.output(locations = get_locations()))
+    cat("We are checking the availability of data for your city_ID, start_date and end_date...\n")
+  }
   
   # Token ----------------------------------------------------------------------
   
@@ -77,21 +100,56 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date) {
   # Check if parameter is of class character
   stopifnot(class(data_type) == "character")
   
+  # Check if data_type is among the available core or other data types 
+  available = c("PRCP", "SNOW", "SNWD", "TMAX", "TMIN")
+  
+  # Check if data_type is among any of the other data types
+  # Reference (Sept. 2018): https://docs.opendata.aws/noaa-ghcn-pds/readme.html
+  other = c("ACMC", "ACMH", "ACSC", "ACSH", "AWDR", "AWND", "DAEV", "DAPR", 
+            "DASF", "DATN", "DATX", "DAWM", "DWPR", "EVAP", "FMTM", "FRGB", 
+            "FRGT", "FRTH", "GAHT", "MDEV", "MDPR", "MDSF", "MDTN", "MDTX", 
+            "MDWM", "MNPN", "MXPN", "PGTM", "PSUN", "TAVG", "THIC", "TOBS", 
+            "TSUN", "WDF1", "WDF2", "WDF5", "WDFG", "WDFI", "WDFM", "WDMV", 
+            "WESD", "WESF", "WSF1", "WSF2", "WSF5", "WSFG", "WSFI", "WSFM")
+  
+  stopifnot(data_type %in% available || data_type %in% other)
+  
   # city_ID --------------------------------------------------------------------
   
   # Check if parameter is of class character
   stopifnot(class(city_ID) == "character")
   
+  # If check = TRUE, check if city ID is among locations
+  if (check == TRUE) stopifnot(city_ID %in% locations$id)
+    
   # start_date -----------------------------------------------------------------
   
   # Check if parameter is of class character
   stopifnot(class(start_date) == "character")
   
+  # If check = TRUE, check if start_date is not before mindate
+  if (check == TRUE) {
+    mindate_chr = locations[which(locations$id == city_ID), "mindate"]
+    mindate_date = as.Date(mindate_chr)
+    start_date_date = as.Date(start_date)
+    
+    stopifnot(mindate_date <= start_date_date)
+  }
+
   # end_date -------------------------------------------------------------------
   
   # Check if parameter is of class character
   stopifnot(class(end_date) == "character")
   
+  # If check = TRUE, check if end_date is not after mindate
+  if (check == TRUE) {
+    maxdate_chr = locations[which(locations$id == city_ID), "maxdate"]
+    maxdate_date = as.Date(maxdate_chr)
+    end_date_date = as.Date(end_date)
+    
+    stopifnot(end_date_date <= maxdate_date)
+  }
+
   # ----------------------------------------------------------------------------
   # Data Retrieval
   # ----------------------------------------------------------------------------
@@ -150,6 +208,7 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date) {
   # Data Modifications and Return
   # ----------------------------------------------------------------------------
   
+  # Return weatherdata
   return(data)
   
 }
