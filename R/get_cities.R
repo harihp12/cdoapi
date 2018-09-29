@@ -58,7 +58,7 @@ get_cities = function() {
   # ----------------------------------------------------------------------------
   
   # Get information about number of available locations
-  url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations"
+  url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations?locationcategoryid=CITY"
   resp = GET(url, add_headers(token = mytoken))
   parsed = fromJSON(content(resp, type = "text", encoding = "UTF-8"))
   
@@ -69,7 +69,7 @@ get_cities = function() {
   # cat("We are getting all cities for you. Please be patient...")
   
   # Initialize dataset with information about first 1000 locations
-  url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations?limit=1000"
+  url = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations?locationcategoryid=CITY&limit=1000"
   resp = GET(url, add_headers(token = mytoken))
   parsed = fromJSON(content(resp, type = "text", encoding = "UTF-8"))
   data = parsed$results
@@ -80,9 +80,9 @@ get_cities = function() {
     if (i == p) {
       
       # Pull the last bulk of locations from NOAA
-      url_base = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations"
+      url_base = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations?locationcategoryid=CITY"
       limit = number - p * 1000
-      url = paste0(url_base, "?limit=", limit , "&offset=", i * 1000 + 1)
+      url = paste0(url_base, "&limit=", limit , "&offset=", i * 1000 + 1)
       resp = GET(url, add_headers(token = mytoken))
       parsed = fromJSON(content(resp, type = "text", encoding = "UTF-8"))
       
@@ -92,7 +92,7 @@ get_cities = function() {
     } else {
       
       # Pull the next 1000 locations from NOAA
-      url_base = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations?limit=1000"
+      url_base = "https://www.ncdc.noaa.gov/cdo-web/api/v2/locations??locationcategoryid=CITY&limit=1000"
       url = paste0(url_base, "&offset=", i * 1000 + 1)
       resp = GET(url, add_headers(token = mytoken))
       parsed = fromJSON(content(resp, type = "text", encoding = "UTF-8"))
@@ -107,10 +107,6 @@ get_cities = function() {
   # ----------------------------------------------------------------------------
   # Data Modifications and Return
   # ----------------------------------------------------------------------------
-
-  # Remove all rows that do not have a "CITY" in their id since the API is 
-  # only offered for cities
-  data = data[which(grepl("CITY", data$id)), ]
   
   # Modify city ID (by removing a "CITY:" prefix that is not part of the id)
   data$id = substr(data$id, 6, nchar(data$id))
