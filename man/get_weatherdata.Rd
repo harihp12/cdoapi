@@ -4,42 +4,68 @@
 \alias{get_weatherdata}
 \title{Get weatherdata for specific time period and cities}
 \usage{
-get_weatherdata(data_type, city_ID, start_date, end_date)
+get_weatherdata(data_type, city_ID, start_date, end_date, check = TRUE)
 }
 \arguments{
-\item{data_type}{Character}
+\item{data_type}{Character, data type}
 
-\item{city_ID}{Character}
+\item{city_ID}{Character, valid city ID}
 
 \item{start_date}{Character, valid date}
 
 \item{end_date}{Character, valid date}
+
+\item{check}{Boolean}
 }
 \value{
-
+Weather data from all the stations in the specified city are returned.
+Consider using \code{simplify_weatherdata} function to aggregate and 
+simplify this result to an easy-to-use daily data format.
 }
 \description{
-get_weatherdata allows the user to get weatherdata for a specified
+get_weatherdata allows the user to get weatherdata for a specified:
 }
 \details{
-a) data_type (e.g. TAVG, TMIN, TMAX, SNOW, PRCP, 
-   others: https://docs.opendata.aws/noaa-ghcn-pds/readme.html)
-b) city_ID (which should be taken from the output of get_locations)
-c) start_date (in the format "YYYY-MM-DD")
-d) end_date (in the format "YYYY-MM-DD")
+a) data_type - Type of weather data. e.g. Temperature average/min/max (TAVG/TMIN/TMAX),
+       snowfall (SNOW), precipitation (PRCP), etc. 
+       Refer \href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{here} 
+       for detailed documentation about available data types.
+    b) city_ID: should be taken as per the output of \code{get_cities} function
+    c) start_date (in the format "YYYY-MM-DD")
+    d) end_date (in the format "YYYY-MM-DD")
+
+Note: For this function, get_weatherdata, we also check the city_ID, the 
+start_date and end_date. Because this requires another run of the function 
+, which takes time, we give the user the option to switch this 
+off with check = FALSE assuming that he himself checks the parameter inputs 
+thouroughly when he does indeed set check = FALSE.
 }
 \examples{
 \dontrun{
+
+# First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
+# Then, set it as system variable (as character variable):
+Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
+
 # Get location data to select the city_IDs we are interested in
-locations = get_locations()
+cities = ()
 
 # Get weatherdata for LinkÃ¶ping (only September)
-head(locations[which(locations$country == "SW"), ]) # Pick SW000006 (LinkÃ¶ping)
+head(cities[which(cities$country == "SW"), ]) # Pick SW000006 (LinkÃ¶ping)
 weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
 
 # Get weatherdata for Berlin (only September)
-head(locations[which(locations$country == "GM"), ]) # Pick GM000001 (Berlin)
+head(cities[which(cities$country == "GM"), ]) # Pick GM000001 (Berlin)
 weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
+
+# If you want to download data for several years, you need to do it year by year
+weatherdata_2018 = get_weatherdata("TAVG", "SW000006", "2018-01-01", "2018-08-31", check = FALSE)
+weatherdata_2017 = get_weatherdata("TAVG", "SW000006", "2017-01-01", "2017-12-31", check = FALSE)
+weatherdata_17to18 = rbind(weatherdata_2017, weatherdata_2018)
+plot(x = as.Date(weatherdata_17to18$date), y = weatherdata_17to18$value/10, 
+     main = "Avg. Temperature in LinkÃ¶ping, Sweden [2017-2018]", 
+     xlab = "Date", ylab= "Temperature in C")
+     
 }
 
 }

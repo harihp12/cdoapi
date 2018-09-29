@@ -1,50 +1,36 @@
-################################################################################
+#' Simplify weather data for multi-station cities
+#' 
+#' For multi-station cities, aggregates numeric values of weather data, calculates 
+#' their mean value for each day and simplifies the columns to an easy-to-use daily
+#' data format.
+#'
+#' @param weatherdata Data frame containing the result of \code{get_weatherdata}
+#' function
+#'
+#' @return
+#' Modified data frame containing one row for each day; 2 columns containing date 
+#' and mean weather data value for that date.
+#'
+#' @examples
+#' \dontrun{
+#' # First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
+#' # Then, set it as system variable (as character variable):
+#' Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
+#' 
+#' # Get weatherdata for Berlin (only September)
+#' weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
+#' 
+#' # Since there are 2 stations with weather data for Berlin, we modify the data
+#' weatherdata_simplified = simplify_weatherdata(weatherdata)
+#' }
+#' 
+#' @importFrom dplyr summarise group_by
+#' @importFrom stringr %>%
+#' 
+#' @export
 
 # ------------------------------------------------------------------------------
-# DESCRIPTION
-# ------------------------------------------------------------------------------
-
-# This function takes as input a data frame that was returned by the 
-# get_weatherdata function. 
-
-# The simplify_weatherdata function comes into play, when the user has extracted
-# weatherdata with get_weatherdata for a city in which several different 
-# weather stations exist. If this is the case, then there will be several 
-# data points for the value (e.g. TAVG) for every day for the city, namely 
-# one data point for each station that has information about the city.
-
-# simplify_weatherdata calculates the mean of the value column from the data frame 
-# that was returned by get_weatherdata. The mean is calculated across stations 
-# for every day. Hence, the simplify_weatherdata returns a modified data frame 
-# that really contains one value per day for the given city.
-
-
-# ------------------------------------------------------------------------------
-# Required Packages
-# ------------------------------------------------------------------------------
-
-library(dplyr)
-
-# ------------------------------------------------------------------------------
-# Example (Run this after loading the packages, functions etc.)
-# ------------------------------------------------------------------------------
-
-# # First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
-# # Then, set it as system variable (as character variable):
-# Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
-# 
-# # Get weatherdata for Berlin (only September)
-# weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
-# 
-# # Since there are 2 stations with weather data for Berlin, we modify the data
-# 
-# weatherdata_simplified = simplify_weatherdata(weatherdata)
-
-################################################################################
-
-
-# ------------------------------------------------------------------------------
-# Aggregate weatherdata accross different stations by day
+# Aggregate and simplify weatherdata across different stations by day
 # ------------------------------------------------------------------------------
 
 simplify_weatherdata = function(weatherdata) {

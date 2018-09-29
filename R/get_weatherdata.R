@@ -1,16 +1,14 @@
 #' Get weatherdata for specific time period and cities
 #' 
-#' get_weatherdata allows the user to get weatherdata for a specified 
+#' get_weatherdata allows the user to get weatherdata for a specified:
 #' 
-#' a) data_type (e.g. TAVG, TMIN, TMAX, SNOW, PRCP, 
-#'    others: https://docs.opendata.aws/noaa-ghcn-pds/readme.html)
-#' b) city_ID (which should be taken from the output of )
-#' c) start_date (in the format "YYYY-MM-DD")
-#' d) end_date (in the format "YYYY-MM-DD")
-#'
-#' Note: The weatherdata from all stations in the specified city is returned. The
-#' function average_stations can be used to automatically modify the data returned
-#' by the get_weatherdata function so that there is only one avg. value per date.
+#'     a) data_type - Type of weather data. e.g. Temperature average/min/max (TAVG/TMIN/TMAX),
+#'        snowfall (SNOW), precipitation (PRCP), etc. 
+#'        Refer \href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{here} 
+#'        for detailed documentation about available data types.
+#'     b) city_ID: should be taken as per the output of \code{get_cities} function
+#'     c) start_date (in the format "YYYY-MM-DD")
+#'     d) end_date (in the format "YYYY-MM-DD")
 #'
 #' Note: For this function, get_weatherdata, we also check the city_ID, the 
 #' start_date and end_date. Because this requires another run of the function 
@@ -18,17 +16,21 @@
 #' off with check = FALSE assuming that he himself checks the parameter inputs 
 #' thouroughly when he does indeed set check = FALSE.
 #'
-#' @param data_type Character
-#' @param city_ID Character
+#' @param data_type Character, data type
+#' @param city_ID Character, valid city ID
 #' @param start_date Character, valid date
 #' @param end_date Character, valid date
+#' @param check Boolean
 #'
 #' @return
+#' Weather data from all the stations in the specified city are returned.
+#' Consider using \code{simplify_weatherdata} function to aggregate and 
+#' simplify this result to an easy-to-use daily data format.
 #'
 #' @examples
 #' \dontrun{
 #' 
-#' #' # First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
+#' # First get your API-token here: https://www.ncdc.noaa.gov/cdo-web/token
 #' # Then, set it as system variable (as character variable):
 #' Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
 #' 
@@ -43,7 +45,6 @@
 #' head(cities[which(cities$country == "GM"), ]) # Pick GM000001 (Berlin)
 #' weatherdata = get_weatherdata("TAVG", "GM000001", "2018-09-01", "2018-09-23")
 #' 
-#' 
 #' # If you want to download data for several years, you need to do it year by year
 #' weatherdata_2018 = get_weatherdata("TAVG", "SW000006", "2018-01-01", "2018-08-31", check = FALSE)
 #' weatherdata_2017 = get_weatherdata("TAVG", "SW000006", "2017-01-01", "2017-12-31", check = FALSE)
@@ -53,8 +54,12 @@
 #'      xlab = "Date", ylab= "Temperature in C")
 #'      
 #' }
-#' @export
 #' 
+#' @importFrom httr GET add_headers content
+#' @importFrom jsonlite fromJSON
+#' @importFrom utils capture.output
+#' 
+#' @export
 
 
 # ------------------------------------------------------------------------------

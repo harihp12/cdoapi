@@ -20,6 +20,13 @@
 #' head(cities[which(cities$country == "GM"), ]) # Cities in Germany
 #' }
 #' 
+#' @references 
+#' API Reference: https://www.ncdc.noaa.gov/cdo-web/webservices/v2#locations
+#' 
+#' @importFrom httr GET add_headers content
+#' @importFrom jsonlite fromJSON
+#' @importFrom utils capture.output
+#' 
 #' @export
 ################################################################################
 
