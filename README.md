@@ -33,7 +33,7 @@ head(cities[which(cities$country == "GM"), ]) # Cities in Germany
 ```
 
 ### get_weatherdata
-Gets the weather data for a specified - data_type (Refer [here](https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary) for detailed documentation about available data types), city_ID, start_date (in the format "YYYY-MM-DD") and end_date (in the format "YYYY-MM-DD").
+Gets the weather data for a specified - data type (Refer [here](https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary) for detailed documentation about available data types), city ID, start date and end date.
 
 ```R
 # Get weatherdata for Berlin (only September)

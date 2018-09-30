@@ -1,0 +1,85 @@
+---
+title: "R Interface for the NOAA Climate Data Online API (cdoapi)"
+author: "Hariprasath Govindarajan, Hector Plata and Julius Kittler"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{cdoapi}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+The `cdoapi` package implements an R interface for the NOAA Climate Data Online web API. This package can be used to find information about data availability, fetch data for specific cities and time periods and simplify the data to an easy-to-use format. In this vignette, we will show an example workflow for using the package.
+
+
+# Usage
+
+## Authentication
+To use the features of this interface package, you require an API access token from NCDC CDO Web Services. You can get your access token for free from [here](https://www.ncdc.noaa.gov/cdo-web/token) by registering with your email address. Before using the functions provided by the `cdoapi` package, you should set the character token as a system variable.
+
+```{r, message=FALSE}
+Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
+
+# Loading the library.
+library(cdoapi)
+```
+
+```{r, echo=FALSE}
+Sys.setenv("NOAA_TOKEN" = "eqtRUMJbywsmAOOgzEJyrfcUAmHVwxPA")
+```
+
+
+## Get data availability information
+
+We can easily find out for which cities and for which time periods the weather data is available by calling `get_cities` function.
+
+```{r}
+cities = get_cities()
+head(cities)
+```
+
+This data frame contains the minimum and maximum dates between which weather data is available for a city as well as the percentage of data availability (datacoverage). We can now explore the `cities` data frame by simple subsetting to find out which cities are supported in each country. You can refer to this [table](https://docs.opendata.aws/noaa-ghcn-pds/readme.html#lookup-table-of-country-codes) for the country codes.
+
+```{r}
+head(cities[which(cities$country == "GM"), ]) # Cities in Germany
+```
+
+
+## Get weather data for a city
+
+The key feature of the package is to fetch weather data. For example, you might want to fetch the daily average temperatures in Berlin during the month of August 2018. This can be easily achieved using the `get_weatherdata` function. Refer to the above data frame to find out the city ID for Berlin (GM000001). For the name of weather data type, refer to this [API documentation](https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary) which lists all the weather data types available through this API. 
+
+The `check` parameter in the function controls whether the city ID and dates need to be validated for availability. By default, check is set to TRUE and validation will be done for every function call. Since, we have verified in the above data frame, we do not need to validate again. This improves the performance of the function and would be essential when the function is used frequently for known and verified inputs.
+
+```{r}
+weatherdata = get_weatherdata("TAVG", "GM000001", "2018-08-01", "2018-08-31", check = FALSE)
+head(weatherdata)
+```
+
+From the above result, we notice that it contains weather data values from 2 different weather stations. 
+
+
+## Simplifying weather data
+
+The `simplify_weatherdata` function plays the role of consolidating and simplifying the weather data to a simple format which can be easily used for reporting, analysis or graph plotting purposes. The weather data is aggregated for each day as a mean of the values obtained from the different stations.
+
+```{r}
+weatherdata_simplified = simplify_weatherdata(weatherdata)
+head(weatherdata_simplified)
+```
+
+The above is the simplified result which only contains the dates and the corresponding mean value of the weather data type.
+
+
+# References
+[API reference](https://www.ncdc.noaa.gov/cdo-web/webservices/v2)
+
+[NOAA GHCN-D Documentation](https://docs.opendata.aws/noaa-ghcn-pds/readme.html)
