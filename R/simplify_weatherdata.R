@@ -4,7 +4,7 @@
 #' their mean value for each day and simplifies the columns to an easy-to-use daily
 #' data format.
 #'
-#' @param weatherdata Data frame containing the result of \code{get_weatherdata}
+#' @param weatherdata Data frame containing the result of \code{\link{get_weatherdata}}
 #' function
 #'
 #' @return

@@ -1,31 +1,37 @@
-#' Get weatherdata for specific time period and cities
+#' Get weatherdata of a city for a specific time period
 #' 
-#' get_weatherdata allows the user to get weatherdata for a specified:
-#' 
-#'     a) data_type - Type of weather data. e.g. Temperature average/min/max (TAVG/TMIN/TMAX),
-#'        snowfall (SNOW), precipitation (PRCP), etc. 
-#'        Refer \href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{here} 
-#'        for detailed documentation about available data types.
-#'     b) city_ID: should be taken as per the output of \code{get_cities} function
-#'     c) start_date (in the format "YYYY-MM-DD")
-#'     d) end_date (in the format "YYYY-MM-DD")
+#' \code{get_weatherdata} allows the user to get weather data for a specified:
+#' \enumerate{
+#'   \item data_type - Type of weather data. e.g. Temperature average/min/max (TAVG/TMIN/TMAX),
+#'     snowfall (SNOW), precipitation (PRCP), etc. 
+#'     Refer \href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{here} 
+#'     for detailed documentation about available data types.
+#'   \item city_ID: should be taken as per the output of \code{\link{get_cities}} function
+#'   \item start_date (in the format "YYYY-MM-DD")
+#'   \item end_date (in the format "YYYY-MM-DD")
+#' }
 #'
-#' Note: For this function, get_weatherdata, we also check the city_ID, the 
-#' start_date and end_date. Because this requires another run of the function 
-#' , which takes time, we give the user the option to switch this 
-#' off with check = FALSE assuming that he himself checks the parameter inputs 
-#' thouroughly when he does indeed set check = FALSE.
-#'
-#' @param data_type Character, data type
+#' @param data_type Character, data type (refer 
+#'   \href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{documentation} 
+#'   for supported types)
 #' @param city_ID Character, valid city ID
-#' @param start_date Character, valid date
-#' @param end_date Character, valid date
-#' @param check Boolean
+#' @param start_date Character, valid date (in YYYY-MM-DD format)
+#' @param end_date Character, valid date (in YYYY-MM-DD format)
+#' @param check Boolean, whether \code{city_ID}, \code{start_date}, \code{end_date} must be 
+#'   validated. Can be skipped by passing \code{check=FALSE} which improves performance. 
 #'
 #' @return
-#' Weather data from all the stations in the specified city are returned.
-#' Consider using \code{simplify_weatherdata} function to aggregate and 
-#' simplify this result to an easy-to-use daily data format.
+#' Weather data from all the stations in the specified city and the soecified 
+#' time period are returned. Consider using \code{\link{simplify_weatherdata}} function 
+#' to aggregate and simplify this result to an easy-to-use daily data format. 
+#' The data contains the following columns:
+#' \itemize{
+#'   \item date (in YYYY-MM-DDThh:mm:ss format)
+#'   \item datatype - weather data type that was queried
+#'   \item station - station ID
+#'   \item attributes
+#'   \item value - value of queried weather data type
+#' }
 #'
 #' @examples
 #' \dontrun{
@@ -35,7 +41,7 @@
 #' Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
 #' 
 #' # Get location data to select the city_IDs we are interested in
-#' cities = ()
+#' cities = get_cities()
 #' 
 #' # Get weatherdata for Linköping (only September)
 #' head(cities[which(cities$country == "SW"), ]) # Pick SW000006 (Linköping)
@@ -55,6 +61,10 @@
 #'      
 #' }
 #' 
+#' @references 
+#' NOAA GHCN-D Documentation - \url{https://docs.opendata.aws/noaa-ghcn-pds/readme.html} \cr
+#' API Reference - \url{https://www.ncdc.noaa.gov/cdo-web/webservices/v2#data}
+#' 
 #' @importFrom httr GET add_headers content
 #' @importFrom jsonlite fromJSON
 #' @importFrom utils capture.output
@@ -63,7 +73,7 @@
 
 
 # ------------------------------------------------------------------------------
-# Get weatherdata for specific time period and cities 
+# Get weatherdata of a city for a specific time period
 # ------------------------------------------------------------------------------
 
 get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRUE) {

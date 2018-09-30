@@ -2,43 +2,48 @@
 % Please edit documentation in R/get_weatherdata.R
 \name{get_weatherdata}
 \alias{get_weatherdata}
-\title{Get weatherdata for specific time period and cities}
+\title{Get weatherdata of a city for a specific time period}
 \usage{
 get_weatherdata(data_type, city_ID, start_date, end_date, check = TRUE)
 }
 \arguments{
-\item{data_type}{Character, data type}
+\item{data_type}{Character, data type (refer 
+\href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{documentation} 
+for supported types)}
 
 \item{city_ID}{Character, valid city ID}
 
-\item{start_date}{Character, valid date}
+\item{start_date}{Character, valid date (in YYYY-MM-DD format)}
 
-\item{end_date}{Character, valid date}
+\item{end_date}{Character, valid date (in YYYY-MM-DD format)}
 
-\item{check}{Boolean}
+\item{check}{Boolean, whether \code{city_ID}, \code{start_date}, \code{end_date} must be 
+validated. Can be skipped by passing \code{check=FALSE} which improves performance.}
 }
 \value{
-Weather data from all the stations in the specified city are returned.
-Consider using \code{simplify_weatherdata} function to aggregate and 
-simplify this result to an easy-to-use daily data format.
+Weather data from all the stations in the specified city and the soecified 
+time period are returned. Consider using \code{\link{simplify_weatherdata}} function 
+to aggregate and simplify this result to an easy-to-use daily data format. 
+The data contains the following columns:
+\itemize{
+  \item date (in YYYY-MM-DDThh:mm:ss format)
+  \item datatype - weather data type that was queried
+  \item station - station ID
+  \item attributes
+  \item value - value of queried weather data type
+}
 }
 \description{
-get_weatherdata allows the user to get weatherdata for a specified:
+\code{get_weatherdata} allows the user to get weather data for a specified:
+\enumerate{
+  \item data_type - Type of weather data. e.g. Temperature average/min/max (TAVG/TMIN/TMAX),
+    snowfall (SNOW), precipitation (PRCP), etc. 
+    Refer \href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{here} 
+    for detailed documentation about available data types.
+  \item city_ID: should be taken as per the output of \code{\link{get_cities}} function
+  \item start_date (in the format "YYYY-MM-DD")
+  \item end_date (in the format "YYYY-MM-DD")
 }
-\details{
-a) data_type - Type of weather data. e.g. Temperature average/min/max (TAVG/TMIN/TMAX),
-       snowfall (SNOW), precipitation (PRCP), etc. 
-       Refer \href{https://docs.opendata.aws/noaa-ghcn-pds/readme.html#element-summary}{here} 
-       for detailed documentation about available data types.
-    b) city_ID: should be taken as per the output of \code{get_cities} function
-    c) start_date (in the format "YYYY-MM-DD")
-    d) end_date (in the format "YYYY-MM-DD")
-
-Note: For this function, get_weatherdata, we also check the city_ID, the 
-start_date and end_date. Because this requires another run of the function 
-, which takes time, we give the user the option to switch this 
-off with check = FALSE assuming that he himself checks the parameter inputs 
-thouroughly when he does indeed set check = FALSE.
 }
 \examples{
 \dontrun{
@@ -48,10 +53,10 @@ thouroughly when he does indeed set check = FALSE.
 Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
 
 # Get location data to select the city_IDs we are interested in
-cities = ()
+cities = get_cities()
 
-# Get weatherdata for Linköping (only September)
-head(cities[which(cities$country == "SW"), ]) # Pick SW000006 (Linköping)
+# Get weatherdata for LinkÃ¶ping (only September)
+head(cities[which(cities$country == "SW"), ]) # Pick SW000006 (LinkÃ¶ping)
 weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
 
 # Get weatherdata for Berlin (only September)
@@ -63,9 +68,13 @@ weatherdata_2018 = get_weatherdata("TAVG", "SW000006", "2018-01-01", "2018-08-31
 weatherdata_2017 = get_weatherdata("TAVG", "SW000006", "2017-01-01", "2017-12-31", check = FALSE)
 weatherdata_17to18 = rbind(weatherdata_2017, weatherdata_2018)
 plot(x = as.Date(weatherdata_17to18$date), y = weatherdata_17to18$value/10, 
-     main = "Avg. Temperature in Linköping, Sweden [2017-2018]", 
+     main = "Avg. Temperature in LinkÃ¶ping, Sweden [2017-2018]", 
      xlab = "Date", ylab= "Temperature in C")
      
 }
 
+}
+\references{
+NOAA GHCN-D Documentation - \url{https://docs.opendata.aws/noaa-ghcn-pds/readme.html} \cr
+API Reference - \url{https://www.ncdc.noaa.gov/cdo-web/webservices/v2#data}
 }

@@ -7,11 +7,22 @@
 get_cities()
 }
 \value{
-Data frame containing information about the available cities.
+Data frame containing information about all the cities for which weather 
+data is available and the time period of the data. The following columns 
+are returned:
+\itemize{
+  \item mindate - minimum date from which data is available
+  \item maxdate - maximum date upto which data is available
+  \item datacoverage - measure of data availability in the time period
+  \item id - city ID (required for using \code{get_weatherdata})
+  \item country - country ID
+  \item City - city name
+}
 }
 \description{
 \code{get_cities} is a function that lists all the available cities for 
-which the data can be queried with \code{get_weatherdata}
+which the data can be fetched with \code{get_weatherdata} along with 
+their data availability details.
 }
 \examples{
 \dontrun{
@@ -29,5 +40,5 @@ head(cities[which(cities$country == "GM"), ]) # Cities in Germany
 
 }
 \references{
-API Reference: https://www.ncdc.noaa.gov/cdo-web/webservices/v2#locations
+API Reference: \url{https://www.ncdc.noaa.gov/cdo-web/webservices/v2#locations}
 }

@@ -7,7 +7,7 @@
 simplify_weatherdata(weatherdata)
 }
 \arguments{
-\item{weatherdata}{Data frame containing the result of \code{get_weatherdata}
+\item{weatherdata}{Data frame containing the result of \code{\link{get_weatherdata}}
 function}
 }
 \value{
