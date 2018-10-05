@@ -55,8 +55,8 @@ Sys.setenv("NOAA_TOKEN" = "YOUR_TOKEN_GOES_IN_HERE")
 # Get location data to select the city_IDs we are interested in
 cities = get_cities()
 
-# Get weatherdata for LinkÃ¶ping (only September)
-head(cities[which(cities$country == "SW"), ]) # Pick SW000006 (LinkÃ¶ping)
+# Get weatherdata for Linköping (only September)
+head(cities[which(cities$country == "SW"), ]) # Pick SW000006 (Linköping)
 weatherdata = get_weatherdata("TAVG", "SW000006", "2018-09-01", "2018-09-23")
 
 # Get weatherdata for Berlin (only September)
@@ -68,7 +68,7 @@ weatherdata_2018 = get_weatherdata("TAVG", "SW000006", "2018-01-01", "2018-08-31
 weatherdata_2017 = get_weatherdata("TAVG", "SW000006", "2017-01-01", "2017-12-31", check = FALSE)
 weatherdata_17to18 = rbind(weatherdata_2017, weatherdata_2018)
 plot(x = as.Date(weatherdata_17to18$date), y = weatherdata_17to18$value/10, 
-     main = "Avg. Temperature in LinkÃ¶ping, Sweden [2017-2018]", 
+     main = "Avg. Temperature in Linköping, Sweden [2017-2018]", 
      xlab = "Date", ylab= "Temperature in C")
      
 }
