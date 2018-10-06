@@ -1,6 +1,6 @@
-library(shiny)
-library(plotly)
-library(ggplot2)
+#library(shiny)
+#library(plotly)
+#library(ggplot2)
 
 # Function for getting
 # the last month of a specific date.
