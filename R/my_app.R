@@ -93,11 +93,6 @@ server = function(input, output){
                                     check=FALSE)
       weatherdata_simplified = simplify_weatherdata(weatherdata)
       
-      p = ggplot(weatherdata_simplified, aes(date, TAVG))
-      p = p + geom_point() + stat_smooth()
-      
-      p = ggplotly(p)
-      
       p = plot_ly(type="scatter", mode="lines") %>%
         add_trace(x=weatherdata_simplified$date,
                   y=weatherdata_simplified$TAVG,
