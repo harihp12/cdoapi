@@ -182,6 +182,7 @@ get_weatherdata = function(data_type, city_ID, start_date, end_date, check = TRU
   parsed = fromJSON(content(resp, type = "text", encoding = "UTF-8"))
   
   number = parsed$metadata$resultset$count # number of observations
+  print(number)
   p = ceiling(number / 1000) - 1 # no. of required loops (due to max limit 1000)
   
   # # Print a quick info for the user

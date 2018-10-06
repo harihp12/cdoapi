@@ -1,7 +1,44 @@
-#' @title Function \code{my_app}
-#' @description Runs the Shiny app.
-#' @import shiny
-#' @export
+library(shiny)
+
+# Function for getting
+# the last month of a specific date.
+get_month = function(date){
+  # Date should be a string
+  # of the format: "y%-m%-d%".
+  # Getting the month.
+  month = as.numeric(substr(date, 6, 7))
+  
+  #  If it's January, the month needs to be changed
+  # to December and a year needs to be substracted.
+  if (month == 1){
+    # From January to December.
+    month = 12
+    
+    # Going to the last year.
+    year = as.numeric(substr(date, 1, 4))
+    year = as.character(year - 1)
+    substr(date, 1, 4) = year
+    
+  } else {
+    # Otherwise substract the a month.
+    month = month - 1
+  }
+  
+  # Getting the month as a character
+  month = as.character(month)
+  
+  # Verifying it's well formated and if
+  # not, correct it.
+  if (nchar(month) != 2){
+    month = paste("0", month, sep="")
+  }
+  
+  substr(date, 6, 7) = month
+  
+  # Return modified date.
+  return(date)
+}
+
 
 # Starting the data processing.
 # Setting up the token.
@@ -26,7 +63,7 @@ ui = function(){fluidPage(
                     a("here", href="https://docs.opendata.aws/noaa-ghcn-pds/readme.html#lookup-table-of-country-codes"))),
                 
                   
-  mainPanel("ASD"))
+  mainPanel(uiOutput("weather_plot")))
 
 )}
 
@@ -43,6 +80,23 @@ server = function(input, output){
                   choices=cities$city[cities$country == input$country])
     }
   )
+  
+  # Filtering to get the city info.
+  output$weather_plot = renderUI(
+    if (is.null(input$city)){
+      return()
+    } else{
+      city_info = cities[cities$city == input$city, ]
+      weatherdata = get_weatherdata("TAVG",
+                                    city_info$id,
+                                    city_info$mindate,
+                                    city_info$maxdate,
+                                    check=FALSE)
+    }
+  )
+  
+  
+  
 }
 
 my_app = function(){
