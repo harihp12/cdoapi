@@ -1,7 +1,3 @@
-#library(shiny)
-#library(plotly)
-#library(ggplot2)
-
 # Function for getting
 # the last month of a specific date.
 get_month = function(date){
@@ -65,7 +61,7 @@ ui = function(){fluidPage(
                     a("here", href="https://docs.opendata.aws/noaa-ghcn-pds/readme.html#lookup-table-of-country-codes"))),
                 
                   
-  mainPanel(plotOutput("weather_plot")))
+  mainPanel(plotlyOutput("weather_plot")))
 
 )}
 
@@ -84,7 +80,7 @@ server = function(input, output){
   )
   
   # Filtering to get the city info.
-  output$weather_plot = renderPlot(
+  output$weather_plot = renderPlotly(
     if (is.null(input$city)){
       p = NULL
       return(p)
@@ -97,16 +93,18 @@ server = function(input, output){
                                     check=FALSE)
       weatherdata_simplified = simplify_weatherdata(weatherdata)
       
-#      p = plot_ly(type="scatter", mode="lines") %>%
-#        add_trace(x=weatherdata_simplified$date,
-#                  y=weatherdata_simplified$TAVG,
-#                  mode="lines+markers",
-#                  name=paste("Last month average temperature of:", input$city))
+      p = ggplot(weatherdata_simplified, aes(date, TAVG))
+      p = p + geom_point() + stat_smooth()
       
-      p = ggplot() +
-        geom_point(aes(x=weatherdata_simplified$date,
-                       y=weatherdata_simplified$TAVG))
-      p
+      p = ggplotly(p)
+      
+      p = plot_ly(type="scatter", mode="lines") %>%
+        add_trace(x=weatherdata_simplified$date,
+                  y=weatherdata_simplified$TAVG,
+                  mode="lines+markers",
+                  name=paste("Last month average temperature of:", input$city)) %>%
+        p
+      return(p)
     }
   )
   
