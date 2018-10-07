@@ -43,7 +43,6 @@ get_month = function(date){
 Sys.setenv("NOAA_TOKEN" = "RCxwJXwZHAFJRIzCPdfLhOshjnRycvio")
 
 # Getting the cities data.
-cat("getting cities bla bla blla")
 cities = get_cities()
 
 # Needs to be a function so nested dependencies are lazily loaded.
