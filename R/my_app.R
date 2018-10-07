@@ -103,8 +103,6 @@ server = function(input, output){
     }
   )
   
-  
-  
 }
 #' @import shiny
 #' @import plotly

@@ -47,3 +47,11 @@ Aggregates and simplifies weather data to an easy-to-use daily data format, whic
 weatherdata_simplified = simplify_weatherdata(weatherdata)
 ```
 
+## Shiny App
+To load the shiny app you need to have the library installed and call the following commands on Rstudio:
+```R
+library(cdoapi)
+library(shiny)
+
+runGitHub("harihp12/cdoapi")
+```
