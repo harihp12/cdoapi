@@ -107,6 +107,7 @@ server = function(input, output){
 #' @import shiny
 #' @import plotly
 #' @import ggplot2
+#' @export
 my_app = function(){
   shinyApp(ui=ui(), server=server)
 }
