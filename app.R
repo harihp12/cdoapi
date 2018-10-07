@@ -55,6 +55,7 @@ Sys.setenv("NOAA_TOKEN" = "eqtRUMJbywsmAOOgzEJyrfcUAmHVwxPA")
 
 # Getting the cities data.
 cities = get_cities()
+print(head(cities))
 
 # Needs to be a function so nested dependencies are lazily loaded.
 # My ui.
