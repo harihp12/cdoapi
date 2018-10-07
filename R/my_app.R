@@ -40,9 +40,10 @@ get_month = function(date){
 
 # Starting the data processing.
 # Setting up the token.
-Sys.setenv("NOAA_TOKEN" = "eqtRUMJbywsmAOOgzEJyrfcUAmHVwxPA")
+Sys.setenv("NOAA_TOKEN" = "RCxwJXwZHAFJRIzCPdfLhOshjnRycvio")
 
 # Getting the cities data.
+cat("getting cities bla bla blla")
 cities = get_cities()
 
 # Needs to be a function so nested dependencies are lazily loaded.
@@ -97,8 +98,8 @@ server = function(input, output){
         add_trace(x=weatherdata_simplified$date,
                   y=weatherdata_simplified$TAVG,
                   mode="lines+markers",
-                  name=paste("Last month average temperature of:", input$city)) %>%
-        p
+                  name=paste("Last month average temperature of:", input$city))
+      
       return(p)
     }
   )
