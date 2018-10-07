@@ -5,7 +5,9 @@
 #' @import plotly
 #' @import ggplot2
 #' @export app
-#' 
+
+library(plotly)
+
 # Function for getting
 # the last month of a specific date.
 get_month = function(date){
