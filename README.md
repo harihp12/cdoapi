@@ -1,5 +1,4 @@
-# cdoapi
-R Interface for the NOAA Climate Data Online API
+# cdoapi (R Interface for the NOAA Climate Data Online API)
 
 [![Build Status](https://travis-ci.com/harihp12/cdoapi.svg?token=zu39qmCz9tp7Bhzm3kEA&branch=master)](https://travis-ci.com/harihp12/cdoapi)
 [![codecov](https://codecov.io/gh/harihp12/cdoapi/branch/master/graph/badge.svg?token=qSGva0cJQs)](https://codecov.io/gh/harihp12/cdoapi)
@@ -9,7 +8,7 @@ This package provides an R interface for the NOAA Climate Data Online API. Throu
 ## Installation
 
 ```R
-devtools::install_github("harihp12/cdoapi")
+devtools::install_github("harihp12/cdoapi", build_vignettes = TRUE)
 ```
 
 ## Authentication
